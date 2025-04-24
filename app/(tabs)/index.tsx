@@ -33,10 +33,10 @@ export default function ConnexionScreen() {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    style={[styles.button, styles.secondaryButton]}
+                    style={[styles.button]}
                     onPress={() => navigation.navigate('register')}
                 >
-                    <Text style={[styles.buttonText, styles.secondaryButtonText]}>Devenir client</Text>
+                    <Text style={[styles.buttonText, styles.buttonText]}>Devenir client</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -63,25 +63,18 @@ const styles = StyleSheet.create({
         paddingBottom: 40,
     },
     button: {
-        backgroundColor: '#007AFF',
+        backgroundColor: '#F0F1F5',
         paddingVertical: 16,
         borderRadius: 12,
         alignItems: 'center',
         marginBottom: 16,
     },
-    secondaryButton: {
-        backgroundColor: 'white',
-        borderWidth: 1,
-        borderColor: '#007AFF',
-    },
     buttonText: {
-        color: 'white',
+        color: 'black',
         fontSize: 16,
         fontWeight: '600',
     },
-    secondaryButtonText: {
-        color: '#007AFF',
-    },
+
     textOverlay: {
         position: 'absolute',
         top: '20%',
