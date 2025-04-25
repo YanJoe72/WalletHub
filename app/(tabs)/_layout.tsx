@@ -7,42 +7,50 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground.ios';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import {Entypo, MaterialCommunityIcons} from '@expo/vector-icons';
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+    const colorScheme = useColorScheme();
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-        <Tabs.Screen
-            name="index"
-            options={{
-                title: 'Connexion',
-                headerShown: false, // masque la barre du haut
-                tabBarStyle: { display: 'none' }, // masque la tab bar en bas
-                tabBarButton: () => null,         // supprime le bouton associé à l’onglet
-            }}
-        />
+    return (
+        <Tabs
+            screenOptions={{
+                tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+                headerShown: false,
+                tabBarButton: HapticTab,
+                tabBarBackground: TabBarBackground,
+                tabBarStyle: Platform.select({
+                    ios: {
+                        position: 'absolute',
+                    },
+                    default: {},
+                }),
+            }}>
+            <Tabs.Screen
+                name="index"
+                options={{
+                    title: 'Home',
+                    tabBarIcon: ({ color }) => <Entypo name="home" size={24} color="black" />,
 
-        <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
-  );
+                }}
+            />
+            <Tabs.Screen
+                name="accounts"
+                options={{
+                    title: 'Accounts',
+                    tabBarIcon: ({ color }) => <MaterialIcons name="account-balance-wallet" size={24} color="black" />,
+                }}
+            />
+            <Tabs.Screen
+                name="settings"
+                options={{
+                    title: 'Settings',
+                    tabBarIcon: ({ color }) => <MaterialCommunityIcons name="account" size={28} color={color} />
+                    ,
+                }}
+            />
+        </Tabs>
+    );
 }

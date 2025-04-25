@@ -7,8 +7,12 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import queryClient from '@/query';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
+import ProductList from "@/screens/ProductList";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -27,13 +31,22 @@ export default function RootLayout() {
     return null;
   }
 
+  const asyncStoragePersister = createAsyncStoragePersister({
+    storage: AsyncStorage,
+  });
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+      <PersistQueryClientProvider
+          client={queryClient}
+          persistOptions={{ persister: asyncStoragePersister }}
+      >
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </PersistQueryClientProvider>
   );
 }
