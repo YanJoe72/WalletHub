@@ -1,69 +1,115 @@
 import React, { useState } from 'react';
-import { StyleSheet,TextInput, Alert   } from 'react-native';
-import PasswordDisplay from '@/components/ui/Password';
-import Keypad from '@/components/ui/Keypad';
+import { StyleSheet,TextInput, Alert ,ScrollView, View, Image  } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import userData from '@/constants/user';
-
-export default function ConnexionScreen() {
-  const [pin, setPin] = useState(''); // Déclaration de pin ici
-  const [id, setId] = useState(''); // Déclaration de pin ici
-
+import Compte  from '@/components/ui/Acceuil/Compte';
+import Depense  from '@/components/ui/Acceuil/Depenses';
+import Button  from '@/components/ui/Connexion/KeyButton';
 
 
 
-  const handleDigitPress = (digit: string) => {
-    if (digit === '←') {
-      // Supprimer un caractère du PIN
-      setPin((prev) => prev.slice(0, -1));
-    } else if (pin.length < 4) {
-      // Ajouter un chiffre au PIN
-      const newPin = pin + digit;
-      setPin(newPin);
 
-      // Vérification du PIN lorsque celui-ci atteint 4 chiffres
-      if (newPin.length === 4) {
-        if (newPin === userData.password) {
-          Alert.alert('Connexion réussie', `Bienvenue, ${userData.id}`);
-          // Navigation vers une autre page (par exemple, Dashboard ou Page d'accueil)
-        } else {
-          Alert.alert('Erreur', 'Code incorrect');
-          setPin(''); // Réinitialiser le PIN après une tentative incorrecte
-        }
-      }
-    }
-  };
+export default function HomeScreen() {
+
+
+const comptes = [
+  { nom: 'N26', solde: '1230.45' },
+  { nom: 'Revolut', solde: '980.00' },
+  { nom: 'Société Générale', solde: '540.75' },
+  { nom: 'Lydia', solde: '215.10' },
+  { nom: 'Caisse d’Épargne', solde: '880.00' },
+];
+ const depenses = [
+    {
+      id: 1,
+      imageSource: require('@/assets/images/netflixlogo.png'),
+      title: "Abonnement mensuel Netflix ",
+      montant: "29.99 €",
+    },
+    {
+      id: 2,
+      imageSource: require('@/assets/images/crabGamelogo.png'),
+      title: "Crab game : Jeux",
+      montant: "50.99€",
+    },
+    {
+      id: 3,
+      imageSource: require('../../assets/images/photologo.png'),
+      title: "Appareil Photo",
+      montant: "64.99€",
+    },
+  ];
+
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}>
-{/*Identifiant*/}
+    <ThemedView>
+
+    <ThemedView>
+      {/* Conteneur avec flexDirection row pour les éléments côte à côte */}
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' ,marginTop:25}}>
+        {/* KeyButton 1 avec image */}
+        <Button
+          digit="1"
+          onPress={(digit) => console.log(digit)}
+          imageSource={require('@/assets/images/Setting.png')} // Remplace par ton image
+        />
+
+        <ThemedText type="title">Home</ThemedText>
+
+        {/* KeyButton 2 avec image */}
+        <Button
+          digit="2"
+          onPress={(digit) => console.log(digit)}
+          imageSource={require('@/assets/images/Notification.png')} // Remplace par ton image
+        />
+      </View>
+    </ThemedView>
+
+      {/* ScrollView avec les comptes */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+        style={styles.scrollContainerHorizontal}
+      >
+        {comptes.map((compte, i) => (
+          <Compte key={i} nomBanque={compte.nom} solde={compte.solde} />
+        ))}
+      </ScrollView>
 
 
-      <ThemedView style={styles.titleContainer}>
-        <TextInput
-           style={styles.input}
-           value={id}
-           onChangeText={setId}
-           placeholder="Identifiant"
-           placeholderTextColor="#999"
-         />
-      </ThemedView>
-{/*Code Personnel*/}
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Code Personnel</ThemedText>
-      </ThemedView>
-{/* Affichage du PIN */}
-      <ThemedView>
-        <PasswordDisplay style={styles.password}  value={pin} />
-      </ThemedView>
-{/* Affichage du Clavier */}
-      <ThemedView style={styles.stepContainer}>
-        <Keypad onDigitPress={handleDigitPress} /> {/* Le clavier */}
-      </ThemedView>
-    </ParallaxScrollView>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' ,marginTop:25}}>
+              {/* KeyButton 1 avec image */}
+              <Button
+                digit="1"
+                onPress={(digit) => console.log(digit)}
+                imageSource={require('@/assets/images/Virement.png')} // Remplace par ton image
+              />
+              <Button
+                digit="1"
+                onPress={(digit) => console.log(digit)}
+                imageSource={require('@/assets/images/Scan.png')} // Remplace par ton image
+              />
+              <Button
+                digit="1"
+                onPress={(digit) => console.log(digit)}
+                imageSource={require('@/assets/images/Document.png')} // Remplace par ton image
+              />
+      </View>
+
+            <ScrollView
+              vertical
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.scrollContent}
+              style={styles.scrollContainerVertical}
+            >
+              {depenses.map((depense, i) => (
+                <Depense image={depense.image} title={depense.title} montant={depense.montant} />
+              ))}
+            </ScrollView>
+    </ThemedView>
   );
 }
 
@@ -96,4 +142,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     color: 'black',
   },
+  scrollContainerVertical:{
+        maxHeight: 500,
+      },
+  scrollContainerHorizontalHorizontal: {
+        maxHeight: 120, // hauteur max (tes cards font ~100px de haut)
+      },
+  scrollContent: {
+    paddingHorizontal: 10,
+    alignItems: 'center',
+      },
 });

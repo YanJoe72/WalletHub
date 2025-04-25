@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet,TextInput, Alert   } from 'react-native';
-import PasswordDisplay from '@/components/ui/Password';
-import Keypad from '@/components/ui/Keypad';
+import PasswordDisplay from '@/components/ui/Connexion/Password';
+import Keypad from '@/components/ui/Connexion/Keypad';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
