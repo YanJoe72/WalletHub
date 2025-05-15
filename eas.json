@@ -6,6 +6,9 @@
   "build": {
     "develop": {
       "distribution": "internal",
+      "android":{
+        "buildType": "apk"
+      },
       "env": {
         "EXPO_PUBLIC_APP_VARIANT": "develop"
       }
