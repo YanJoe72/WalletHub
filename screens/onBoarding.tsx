@@ -11,6 +11,9 @@ import {
   TouchableOpacity,
   Animated
 } from 'react-native';
+import * as Notifications from 'expo-notifications';
+import { Alert, Platform } from 'react-native';
+import { Vibration } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 const image = require('@/assets/images/onBoarding.png');
@@ -34,6 +37,21 @@ const onboardingData = [
     button: "Commencer",
   },
 ];
+
+async function requestNotificationPermission() {
+  const { status } = await Notifications.getPermissionsAsync();
+
+  if (status !== 'granted') {
+    const { status: newStatus } = await Notifications.requestPermissionsAsync();
+    if (newStatus !== 'granted') {
+      Alert.alert(
+        "Permission refusée",
+        "Vous devez autoriser les notifications pour recevoir des alertes importantes."
+      );
+    }
+  }
+  console.log(status)
+}
 
 export default function Onboarding({ onFinish }: { onFinish: () => void }) {
   const [currentPage, setCurrentPage] = useState(0);
@@ -102,6 +120,7 @@ export default function Onboarding({ onFinish }: { onFinish: () => void }) {
     if (Math.abs(xOffset - (page * width)) < 5) {
       if (page !== currentPage) {
         setCurrentPage(page);
+        Vibration.vibrate([0, 50]); 
       }
       
       if (isScrolling) {
@@ -135,7 +154,7 @@ export default function Onboarding({ onFinish }: { onFinish: () => void }) {
                 
                 {item.button && (
                   <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
-                    <TouchableOpacity style={styles.button} onPress={onFinish}>
+                    <TouchableOpacity style={styles.button} onPress={async () => { await requestNotificationPermission(); onFinish();}}>
                       <Text style={styles.buttonText}>{item.button}</Text>
                     </TouchableOpacity>
                   </Animated.View>
