@@ -14,43 +14,42 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 export default function TabLayout() {
     const colorScheme = useColorScheme();
 
-    return (
-        <Tabs
-            screenOptions={{
-                tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-                headerShown: false,
-                tabBarButton: HapticTab,
-                tabBarBackground: TabBarBackground,
-                tabBarStyle: Platform.select({
-                    ios: {
-                        position: 'absolute',
-                    },
-                    default: {},
-                }),
-            }}>
-            <Tabs.Screen
-                name="index"
-                options={{
-                    title: 'Home',
-                    tabBarIcon: ({ color }) => <Entypo name="home" size={24} color="black" />,
-
-                }}
-            />
-            <Tabs.Screen
+  return (
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        headerShown: false,
+        tabBarButton: HapticTab,
+        tabBarBackground: TabBarBackground,
+        tabBarStyle: Platform.select({
+          ios: {
+            position: 'absolute',
+          },
+          default: {},
+        }),
+      }}>
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Home',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+        }}
+      />
+      <Tabs.Screen
                 name="accounts"
                 options={{
                     title: 'Accounts',
                     tabBarIcon: ({ color }) => <MaterialIcons name="account-balance-wallet" size={24} color="black" />,
                 }}
             />
-           {/* <Tabs.Screen
-                name="settings"
-                options={{
-                    title: 'Settings',
-                    tabBarIcon: ({ color }) => <MaterialCommunityIcons name="account" size={28} color={color} />
-                    ,
-                }}
-            /> */}
-        </Tabs>
-    );
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+        }}
+      />
+                        
+    </Tabs>
+  );
 }
