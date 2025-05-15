@@ -9,7 +9,7 @@ import userData from '@/constants/user';
 
 export default function ConnexionScreen() {
   const [pin, setPin] = useState(''); // Déclaration de pin ici
-  const [id, setId] = useState(''); // Déclaration de pin ici
+  const [id, setId] = useState(''); // Déclaration de id ici
 
 
 
@@ -25,13 +25,15 @@ export default function ConnexionScreen() {
 
 
       if (newPin.length === 4) {
-        if (newPin === userData.password) {
-          Alert.alert('Connexion réussie', `Bienvenue, ${userData.id}`);
+          if(id === userData.id){
+            if (newPin === userData.password) {
+              Alert.alert('Connexion réussie', `Bienvenue, ${userData.id}`);
 
-        } else {
-          Alert.alert('Erreur', 'Code incorrect');
-          setPin(''); // Réinitialiser le PIN après une tentative incorrecte
-        }
+            } else {
+              Alert.alert('Erreur', 'Code ou identidiant incorrect');
+              setPin(''); // Réinitialiser le PIN après une tentative incorrecte
+            }
+         }
       }
     }
   };
