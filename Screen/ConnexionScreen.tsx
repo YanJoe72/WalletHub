@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet,TextInput, Alert   } from 'react-native';
+import { StyleSheet,TextInput, Alert , View ,Text ,SafeAreaView } from 'react-native';
 import PasswordDisplay from '@/components/ui/Connexion/Password';
 import Keypad from '@/components/ui/Connexion/Keypad';
 import { ThemedText } from '@/components/ThemedText';
@@ -23,11 +23,11 @@ export default function ConnexionScreen() {
       const newPin = pin + digit;
       setPin(newPin);
 
-      // Vérification du PIN lorsque celui-ci atteint 4 chiffres
+
       if (newPin.length === 4) {
         if (newPin === userData.password) {
           Alert.alert('Connexion réussie', `Bienvenue, ${userData.id}`);
-          // Navigation vers une autre page (par exemple, Dashboard ou Page d'accueil)
+
         } else {
           Alert.alert('Erreur', 'Code incorrect');
           setPin(''); // Réinitialiser le PIN après une tentative incorrecte
@@ -37,45 +37,45 @@ export default function ConnexionScreen() {
   };
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}>
-{/*Identifiant*/}
+  <SafeAreaView style={styles.safeArea}>
+      <View style={styles.root} >
+            <View style={styles.VueVertical}>
+                <TextInput
+                style={styles.input}
+                value={id}
+                onChangeText={setId}
+                placeholder="Identifiant"
+                placeholderTextColor="#999"
+                />
+            </View>
 
 
-      <ThemedView style={styles.titleContainer}>
-        <TextInput
-           style={styles.input}
-           value={id}
-           onChangeText={setId}
-           placeholder="Identifiant"
-           placeholderTextColor="#999"
-         />
-      </ThemedView>
-{/*Code Personnel*/}
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Code Personnel</ThemedText>
-      </ThemedView>
-{/* Affichage du PIN */}
-      <ThemedView>
-        <PasswordDisplay style={styles.password}  value={pin} />
-      </ThemedView>
-{/* Affichage du Clavier */}
-      <ThemedView style={styles.stepContainer}>
-        <Keypad onDigitPress={handleDigitPress} /> {/* Le clavier */}
-      </ThemedView>
-    </ParallaxScrollView>
+          <View  style={styles.VueVertical}>
+
+            <PasswordDisplay style={styles.password}  value={pin} />
+            <Keypad onDigitPress={handleDigitPress} />
+          </View>
+ </View >
+  </SafeAreaView >
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  VueVertical: {
+    flexDirection: 'column',
     alignItems: 'center',
+    backgroundColor:'white',
     gap: 8,
   },
-  stepContainer: {
+  safeArea: {
+      flex: 1,
+      backgroundColor: 'white',
+    },
+  root: {
     gap: 8,
-    marginBottom: 8,
+     alignItems: 'center',
+     marginTop:200,
+     backgroundColor:'white'
   },
   password:{
        alignItems: 'center',
@@ -87,13 +87,13 @@ const styles = StyleSheet.create({
       },
   input: {
     height: 50,
-    width :220,
-
+    width :260,
+    marginTop:50,
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 10,
     backgroundColor: 'white',
-    color: 'black',
+
   },
 });

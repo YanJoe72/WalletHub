@@ -29,8 +29,8 @@ const Keypad: React.FC<{ onDigitPress: (digit: string) => void }> = ({ onDigitPr
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor : 'gray',
-    flexDirection: 'row',
+      width:300,
+    backgroundColor : '#F0F1F5',
     flexWrap: 'wrap',
     borderRadius: 20,
     justifyContent: 'center',

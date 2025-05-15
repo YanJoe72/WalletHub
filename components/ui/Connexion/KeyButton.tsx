@@ -30,23 +30,25 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 40,
-    backgroundColor: '#e0e0e0',
+      borderColor: 'gray',
+        borderWidth: 2,
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
     margin: 10,
   },
    image: {
-      width: 30,   // Tu peux ajuster ces dimensions
+      width: 30,
       height: 30,
       resizeMode: 'contain',
     },
   disabled: {
-    backgroundColor: '#cccccc',
+    backgroundColor: '#c9c4b5',
   },
   text: {
     fontSize: 28,
     fontWeight: '600',
-    color: '#333',
+
   },
 });
 
