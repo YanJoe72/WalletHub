@@ -43,14 +43,14 @@ export default function TabLayout() {
                     tabBarIcon: ({ color }) => <MaterialIcons name="account-balance-wallet" size={24} color="black" />,
                 }}
             />
-            <Tabs.Screen
+           {/* <Tabs.Screen
                 name="settings"
                 options={{
                     title: 'Settings',
                     tabBarIcon: ({ color }) => <MaterialCommunityIcons name="account" size={28} color={color} />
                     ,
                 }}
-            />
+            /> */}
         </Tabs>
     );
 }
