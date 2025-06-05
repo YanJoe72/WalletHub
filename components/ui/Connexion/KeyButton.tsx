@@ -35,13 +35,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 10,
+    margin: 5,
   },
-   image: {
-      width: 30,
-      height: 30,
-      resizeMode: 'contain',
-    },
+image: {
+  width: 24,
+  height: 24,
+  resizeMode: 'contain',
+},
   disabled: {
     backgroundColor: '#c9c4b5',
   },

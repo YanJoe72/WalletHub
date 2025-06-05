@@ -1,29 +1,47 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import KeyButton from './KeyButton';
+import ClearSymbol from '@/assets/images/ClearSymbol.png'
 
 const rows = [
   ['1', '2', '3'],
   ['4', '5', '6'],
   ['7', '8', '9'],
-  ['', '0', '←']
+  ['', '0','⌫']
 ];
 
 const Keypad: React.FC<{ onDigitPress: (digit: string) => void }> = ({ onDigitPress }) => {
   return (
-  <View style={styles.container}>
-    {rows.map((row, rowIndex) => (
-      <View key={rowIndex} style={styles.row}>
-        {row.map((digit, colIndex) =>
-          digit === '' ? (
-            <View key={colIndex} style={styles.empty} />
-          ) : (
-            <KeyButton key={colIndex} digit={digit} onPress={onDigitPress} />
-          )
-        )}
-      </View>
-    ))}
-  </View>
+    <View style={styles.container}>
+      {rows.map((row, rowIndex) => (
+        <View key={rowIndex} style={styles.row}>
+          {row.map((digit, colIndex) => {
+            if (digit === '') {
+              return <View key={colIndex} style={styles.empty} />;
+            }
+
+            if (digit === '⌫') {
+              return (
+                <KeyButton
+                  key={colIndex}
+                  digit={digit}
+                  onPress={onDigitPress}
+                  image={require('@/assets/images/ClearSymbol.png')}// on passe l'image
+                />
+              );
+            }
+
+            return (
+              <KeyButton
+                key={colIndex}
+                digit={digit}
+                onPress={onDigitPress}
+              />
+            );
+          })}
+        </View>
+      ))}
+    </View>
   );
 };
 

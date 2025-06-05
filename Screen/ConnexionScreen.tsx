@@ -15,16 +15,16 @@ export default function ConnexionScreen() {
 
 
   const handleDigitPress = (digit: string) => {
-    if (digit === '←') {
+    if (digit === '⌫') {
       // Supprimer un caractère du PIN
       setPin((prev) => prev.slice(0, -1));
-    } else if (pin.length < 4) {
+    } else if (pin.length < 6) {
       // Ajouter un chiffre au PIN
       const newPin = pin + digit;
       setPin(newPin);
 
 
-      if (newPin.length === 4) {
+      if (newPin.length === 6) {
           if(id === userData.id){
             if (newPin === userData.password) {
               Alert.alert('Connexion réussie', `Bienvenue, ${userData.id}`);
@@ -42,6 +42,7 @@ export default function ConnexionScreen() {
   <SafeAreaView style={styles.safeArea}>
       <View style={styles.root} >
             <View style={styles.VueVertical}>
+                 <ThemedText style={styles.text} type="title">Identifiant</ThemedText>
                 <TextInput
                 style={styles.input}
                 value={id}
@@ -49,6 +50,7 @@ export default function ConnexionScreen() {
                 placeholder="Identifiant"
                 placeholderTextColor="#999"
                 />
+                <ThemedText style={styles.text} type="title">Code Personnel</ThemedText>
             </View>
 
 
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     width :260,
-    marginTop:50,
+    marginTop:0,
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 8,
@@ -98,4 +100,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
 
   },
+  text:{
+       height: 50,
+       width :260,
+       marginTop:0,
+       alignItems: 'center',
+       justify : 'Left',
+       color:'black',
+      },
 });

@@ -2,35 +2,60 @@ import React from 'react';
 import { TouchableOpacity, View, Text, Image, ScrollView } from 'react-native';
 
 // Composant cliquable dynamique
-const Depenses = ({ imageSource, title, montant, onPress }) => {
+const Depenses = ({id, imageSource, title, montant, onPress }) => {
   return (
-      <View style={{
+      <View  style={{
+
                     flexDirection: 'row',
                     alignItems: 'center',
-                    width :250,
-                    height:200,
+                    width :320,
+                    height: 160,
+
                   }} >
     <TouchableOpacity
       style={{
         padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        backgroundColor: 'white', // gris semi-transparent
+        borderWidth: 3,
+        borderColor: '#ccc',
+        borderRadius:25
+
       }}
       onPress={onPress}
     >
-      <View>
-      {/* Image à gauche */}
-      <Image
-        source={imageSource}
-        style={{ width: 40, height: 40}}
-      />
-      {/* Texte à droite */}
-        <Text style={{ fontWeight: 'bold' }}>{title}</Text>
-        <Text style={{ color: 'gray' }}>{montant}</Text>
-      </View>
+
+          <View
+             style= {{
+                            width:310,
+                            height:80,
+                            padding: 10,
+                            borderWidth: 3,
+
+                            borderColor: 'transparent',
+                            borderRadius: 10,
+                            flexDirection: 'row',
+
+                        }} >
+          {/* Image à gauche */}
+          <Image
+            source={imageSource}
+            style={{ marginRight: 5, width: 40, height: 40 ,  borderRadius: 10,}}/>
+
+          {/* Texte à droite */}
+            <Text  style={{color: 'gray', fontWeight: 'bold', fontSize: 13 }}>{title}</Text>
+
+             {/* Montant */}
+            <Text  style={{marginLeft:10,  color: 'gray', fontWeight: 'bold',fontSize: 15 }}>{montant}</Text>
+          </View>
+          <Text  style={{marginLeft:10,  color: 'gray', fontWeight: 'bold',fontSize: 15 }}>{Date}</Text>
+
     </TouchableOpacity>
    </View>
   );
 };
+
+
+
+
 
 export default Depenses;
