@@ -5,7 +5,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
-// Define a type for the card objects
 interface Card {
     title: string;
     amount: number;
@@ -14,7 +13,6 @@ interface Card {
     pieColor: ColorValue;
 }
 
-// Define fixed colors for each account type with explicit typing
 const accountColors: Record<string, string[]> = {
     Balance: ['#FF5733', '#FF5733'],
     Bakiye: ['#33FF57', '#33FF57'],

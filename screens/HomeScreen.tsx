@@ -1,6 +1,9 @@
 import React, { useState,useRef } from 'react';
 import { StyleSheet,TextInput, Alert ,ScrollView, View, Image,SafeAreaView, Dimensions, NativeScrollEvent, NativeSyntheticEvent   } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import ParallaxScrollView from '@/components/ParallaxScrollView';
+import userData from '@/constants/user';
 import BankCard  from '@/components/ui/Acceuil/BankCard';
 import Depense  from '@/components/ui/Acceuil/Depenses';
 import Button  from '@/components/ui/Connexion/KeyButton';

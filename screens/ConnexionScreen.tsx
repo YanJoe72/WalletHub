@@ -29,7 +29,7 @@ export default function ConnexionScreen() {
           if(id === userData.id){
             if (newPin === userData.password) {
               Alert.alert('Connexion réussie', `Bienvenue, ${userData.id}`);
-              router.push('/(tabs)/');
+              router.push('/(tabs)/accounts');
 
             } else {
               Alert.alert('Erreur', 'Code ou identidiant incorrect');
@@ -72,6 +72,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor:'white',
     gap: 8,
+    paddingBottom:0,
+
   },
   safeArea: {
       flex: 1,
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
   root: {
     gap: 8,
      alignItems: 'center',
-     marginTop:200,
+     marginTop:50,
      backgroundColor:'white'
   },
   password:{
@@ -100,6 +102,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     backgroundColor: 'white',
+    
 
   },
   text:{
