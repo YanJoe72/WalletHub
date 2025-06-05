@@ -6,7 +6,6 @@ import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import {Entypo, MaterialCommunityIcons} from '@expo/vector-icons';
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 
 export default function TabLayout() {
@@ -41,7 +40,7 @@ export default function TabLayout() {
         },
       }}>
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
           title: '',
           headerShown: false,

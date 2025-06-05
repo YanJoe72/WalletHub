@@ -1,5 +1,5 @@
 import ConnexionScreen from "@/screens/ConnexionScreen";
 
-export default function connexion(){
+export default function Connexion(){
     return <ConnexionScreen/>;
 }

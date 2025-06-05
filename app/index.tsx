@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
-import { router } from 'expo-router';
+import HomeScreen from '@/screens/HomeScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
-export default function Index() {
+export default function Home(){
   const [loading, setLoading] = useState(true);
+  const router = useRouter()
 
   useEffect(() => {
     const check = async () => {
@@ -23,5 +25,5 @@ export default function Index() {
     return <View><ActivityIndicator /></View>;
   }
 
-  return null;
+    return <HomeScreen/>;
 }

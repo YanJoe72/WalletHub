@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   Animated
 } from 'react-native';
-import * as Notifications from 'expo-notifications';
+// import * as Notifications from 'expo-notifications';
 import { Alert, Platform } from 'react-native';
 import { Vibration } from 'react-native';
 
@@ -39,18 +39,18 @@ const onboardingData = [
 ];
 
 async function requestNotificationPermission() {
-  const { status } = await Notifications.getPermissionsAsync();
+  // const { status } = await Notifications.getPermissionsAsync();
 
-  if (status !== 'granted') {
-    const { status: newStatus } = await Notifications.requestPermissionsAsync();
-    if (newStatus !== 'granted') {
-      Alert.alert(
-        "Permission refusée",
-        "Vous devez autoriser les notifications pour recevoir des alertes importantes."
-      );
-    }
-  }
-  console.log(status)
+  // if (status !== 'granted') {
+  //   const { status: newStatus } = await Notifications.requestPermissionsAsync();
+  //   if (newStatus !== 'granted') {
+  //     Alert.alert(
+  //       "Permission refusée",
+  //       "Vous devez autoriser les notifications pour recevoir des alertes importantes."
+  //     );
+  //   }
+  // }
+  // console.log(status)
 }
 
 export default function Onboarding({ onFinish }: { onFinish: () => void }) {
