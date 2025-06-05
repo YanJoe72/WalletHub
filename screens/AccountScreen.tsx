@@ -46,6 +46,7 @@ const CardSkeleton = () => (
   </View>
 );
 
+
 export default function AccountScreen() {
     const { data: accounts, isLoading, error, refetch, isFetching } = getAccounts();
     const [refreshing, setRefreshing] = useState(false);
@@ -86,7 +87,7 @@ export default function AccountScreen() {
             <Tabs.Screen
                 options={{
                     headerShown: true,
-                    title: 'Accounts',
+                    title: '',
                     headerTitleAlign: 'center',
                     headerStyle: {
                         backgroundColor: '#fff',

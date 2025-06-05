@@ -1,12 +1,18 @@
 import { Image, StyleSheet, View, SafeAreaView, TouchableOpacity, Text, Dimensions } from 'react-native';
-import { useNavigation } from 'expo-router';
+import { router, useNavigation, useRouter } from 'expo-router';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export default function HomeConnectionScreen() {
-    const navigation = useNavigation();
+
     const handleBecomeClient = () => {
         console.log('Le bouton "Devenir client" a été pressé');
+    };
+
+    const handleClient = () => {
+        console.log('Bouton Se connecter pressé');
+        router.push('/connexion');
+
     };
     return (
         <SafeAreaView style={styles.container}>
@@ -28,7 +34,7 @@ export default function HomeConnectionScreen() {
             <View style={styles.buttonsContainer}>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => navigation.navigate('connexion')}
+                    onPress={handleClient}
                 >
                     <Text style={styles.buttonText}>Se connecter</Text>
                 </TouchableOpacity>
