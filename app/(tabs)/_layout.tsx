@@ -1,11 +1,9 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, View } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground.ios';
-import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import {Entypo, MaterialCommunityIcons} from '@expo/vector-icons';
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -17,22 +15,41 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarBackground: () => <View style={{ backgroundColor: 'white', flex: 1 }}>
+        <View 
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: '25%',
+            right: '25%', 
+            height: 0.5, 
+            backgroundColor: 'grey', 
+            borderRadius: 1.5, 
+          }} 
+        />
+      </View>,
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
-          },
-          default: {},
-        }),
+        tabBarStyle: {
+          backgroundColor: 'white', 
+          ...Platform.select({
+            ios: {
+              position: 'absolute',
+            },
+            default: {},
+          }),
+        },
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: '',
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <View style={{ marginTop: 10, marginLeft: 50  }}>
+              <IconSymbol size={28} name="house.fill" color={color} />
+            </View>
+          ),
         }}
       />
       <Tabs.Screen
@@ -45,8 +62,13 @@ export default function TabLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'Settings',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: '',
+          headerShown: false, 
+          tabBarIcon: ({ color }) => (
+            <View style={{ marginTop: 20}}>
+              <IconSymbol size={28} name="person.fill" color={color} />
+            </View>
+          ),
         }}
       />
                         
