@@ -8,7 +8,7 @@ interface PasswordProps {
   hideText?: boolean; // pour afficher des * au lieu des chiffres
 }
 
-const Password: React.FC<PasswordProps> = ({ value, maxLength = 4, hideText = true }) => {
+const Password: React.FC<PasswordProps> = ({ value, maxLength = 6, hideText = true }) => {
   const padded = value.padEnd(maxLength, ' '); // complète avec des espaces
 
   return (
@@ -30,6 +30,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginBottom: 20,
+    marginLeft: 20,
+
   },
 });
 

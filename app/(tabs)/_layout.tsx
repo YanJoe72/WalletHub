@@ -15,7 +15,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarBackground: () => <View style={{ backgroundColor: 'white', flex: 1 }}>
+        tabBarBackground: () => <View style={{ backgroundColor: 'white' }}>
         <View 
           style={{
             position: 'absolute',
@@ -46,26 +46,31 @@ export default function TabLayout() {
           title: '',
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <View style={{ marginTop: 10, marginLeft: 50  }}>
+            <View style={{ marginTop: 5, marginLeft: 50  }}>
               <IconSymbol size={28} name="house.fill" color={color} />
             </View>
           ),
         }}
       />
       <Tabs.Screen
-                name="accounts"
-                options={{
-                    title: 'Accounts',
-                    tabBarIcon: ({ color }) => <MaterialIcons name="account-balance-wallet" size={24} color="black" />,
-                }}
-            />
+        name="accounts"
+        options={{
+            title: '',
+            headerShown: false,
+            tabBarIcon: ({ color }) => (
+              <View style={{ marginTop: 5 }}>
+                <Entypo name="wallet" size={28} color={color} />
+              </View>
+            ),
+        }}
+        />
       <Tabs.Screen
         name="settings"
         options={{
           title: '',
           headerShown: false, 
           tabBarIcon: ({ color }) => (
-            <View style={{ marginTop: 20}}>
+            <View style={{ marginTop: 5, marginRight: 50}}>
               <IconSymbol size={28} name="person.fill" color={color} />
             </View>
           ),

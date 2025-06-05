@@ -79,7 +79,7 @@ export default function AccountScreen() {
             <Tabs.Screen
                 options={{
                     headerShown: true,
-                    title: 'Accounts',
+                    title: '',
                     headerTitleAlign: 'center',
                     headerRight: () => (
                         <Ionicons name="notifications-outline" size={24} color="#6B7280" style={styles.headerIcon} />
