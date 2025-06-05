@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import KeyButton from './KeyButton';
-import ClearSymbol from '@/assets/images/ClearSymbol.png'
+
 
 const rows = [
   ['1', '2', '3'],
@@ -18,17 +18,6 @@ const Keypad: React.FC<{ onDigitPress: (digit: string) => void }> = ({ onDigitPr
           {row.map((digit, colIndex) => {
             if (digit === '') {
               return <View key={colIndex} style={styles.empty} />;
-            }
-
-            if (digit === '⌫') {
-              return (
-                <KeyButton
-                  key={colIndex}
-                  digit={digit}
-                  onPress={onDigitPress}
-                  image={require('@/assets/images/ClearSymbol.png')}// on passe l'image
-                />
-              );
             }
 
             return (
