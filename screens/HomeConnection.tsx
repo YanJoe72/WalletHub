@@ -1,16 +1,17 @@
 import { Image, StyleSheet, View, SafeAreaView, TouchableOpacity, Text, Dimensions } from 'react-native';
-import { router, useNavigation } from 'expo-router';
+import { router, useNavigation, useRouter } from 'expo-router';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export default function HomeConnectionScreen() {
+
     const handleBecomeClient = () => {
         console.log('Le bouton "Devenir client" a été pressé');
     };
 
     const handleClient = () => {
+        console.log('Bouton Se connecter pressé');
         router.push('/connexion');
-        console.log("test");
 
     };
     return (

@@ -1,4 +1,4 @@
-import ConnexionScreen from '@/Screen/ConnexionScreen';
+import ConnexionScreen from "@/screens/ConnexionScreen";
 
 export default function connexion(){
     return <ConnexionScreen/>;
