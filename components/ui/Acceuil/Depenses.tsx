@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, View, Text, Image, ScrollView } from 'react-native';
 
 // Composant cliquable dynamique
-const Depenses = ({id, imageSource, title, montant, onPress }) => {
+const Depenses = ({id, imageSource, title, montant,date, onPress }) => {
   return (
       <View  style={{
 
@@ -47,7 +47,7 @@ const Depenses = ({id, imageSource, title, montant, onPress }) => {
              {/* Montant */}
             <Text  style={{marginLeft:10,  color: 'gray', fontWeight: 'bold',fontSize: 15 }}>{montant}</Text>
           </View>
-          <Text  style={{marginLeft:10,  color: 'gray', fontWeight: 'bold',fontSize: 15 }}>{Date}</Text>
+          <Text  style={{marginLeft:10,  color: 'gray', fontWeight: 'bold',fontSize: 15 }}>{date}</Text>
 
     </TouchableOpacity>
    </View>
