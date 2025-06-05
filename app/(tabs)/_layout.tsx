@@ -5,9 +5,12 @@ import { Platform, View } from 'react-native';
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import {Entypo, MaterialCommunityIcons} from '@expo/vector-icons';
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+    const colorScheme = useColorScheme();
 
   return (
     <Tabs
@@ -50,6 +53,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+                name="accounts"
+                options={{
+                    title: 'Accounts',
+                    tabBarIcon: ({ color }) => <MaterialIcons name="account-balance-wallet" size={24} color="black" />,
+                }}
+            />
+      <Tabs.Screen
         name="settings"
         options={{
           title: '',
@@ -61,6 +71,7 @@ export default function TabLayout() {
           ),
         }}
       />
+                        
     </Tabs>
   );
 }

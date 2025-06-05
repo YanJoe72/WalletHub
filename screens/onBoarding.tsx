@@ -14,6 +14,7 @@ import {
 import * as Notifications from 'expo-notifications';
 import { Alert, Platform } from 'react-native';
 import { Vibration } from 'react-native';
+import { router } from 'expo-router';
 
 const { width, height } = Dimensions.get('window');
 const image = require('@/assets/images/onBoarding.png');
