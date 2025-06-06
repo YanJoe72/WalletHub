@@ -144,7 +144,6 @@ export default function AccountScreen() {
             </View>
         </View>
     );
-
     return (
         <SafeAreaView style={styles.container}>
             {renderHeader()}
