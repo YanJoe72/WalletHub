@@ -5,13 +5,18 @@ interface KeyButtonProps {
   digit: string;
   onPress: (digit: string) => void;
   disabled?: boolean;
-  imageSource?: any;  // Pour accepter une image source
+  imageSource?: any;
+  size?: 'default' | 'small'; // Pour accepter une image source
 }
 
-const KeyButton: React.FC<KeyButtonProps> = ({ digit, onPress, disabled = false }) => {
+const KeyButton: React.FC<KeyButtonProps> = ({ digit, onPress, disabled = false ,imageSource,size = 'default'}) => {
+    const isSmall = size === 'small';
+
+
   return (
     <TouchableOpacity
-      style={[styles.button, disabled && styles.disabled]}
+
+      style={[styles.button, disabled && styles.disabled, isSmall && styles.smallButton]}
       onPress={() => onPress(digit)}
       disabled={disabled}
       activeOpacity={0.7}
@@ -28,8 +33,8 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 40,
-      borderColor: 'gray',
-        borderWidth: 2,
+    borderColor: 'gray',
+    borderWidth: 1,
     backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
@@ -41,8 +46,12 @@ image: {
   resizeMode: 'contain',
 },
   disabled: {
-    backgroundColor: '#c9c4b5',
+    backgroundColor: '#B2B3B7',
   },
+   smallButton: {
+      width: 40,
+      height: 50,
+    },
   text: {
     fontSize: 28,
     fontWeight: '600',

@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, GestureResponderEvent, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Fontisto from '@expo/vector-icons/Fontisto';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export interface BankCardProps {
     title: string;
@@ -8,25 +10,44 @@ export interface BankCardProps {
     cardNumber: string;
     backgroundColor: string | import('react-native').ColorValue;
     onPress?: (event: GestureResponderEvent) => void;
+    isHidden?: boolean;
 }
 
-
-export default function BankCard({ title, amount, cardNumber, backgroundColor, onPress }: BankCardProps) {
+export default function BankCard({ title, amount, cardNumber, backgroundColor, onPress, isHidden = false }: BankCardProps) {
     const formattedNumber = cardNumber
         ? cardNumber.replace(/(.{4})/g, '$1 ').trim()
         : '';
 
+    const maskedNumber = formattedNumber
+        .split(' ')
+        .map((group, index) => {
+            if (index >= 4) {
+                return group;
+            }
+            return 'XXXX';
+        })
+        .join(' ');
+
+    const displayNumber = isHidden ? maskedNumber : formattedNumber;
+
     return (
         <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
-            <View style={[styles.card, { backgroundColor: backgroundColor || '#8F5CFF' }]}> 
+            <View style={[
+                styles.card, 
+                { 
+                    backgroundColor: backgroundColor || '#8F5CFF',
+                    opacity: isHidden ? 0.7 : 1
+                }
+            ]}> 
                 <View style={styles.headerRow}>
                     <Text style={styles.title}>{title}</Text>
-                    <Ionicons name="eye-off" size={24} color="rgba(255,255,255,0.18)" />
                 </View>
                 <Text style={styles.amount}>
                     {Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount)}
                 </Text>
-                <Text style={styles.cardNumber}>{formattedNumber}</Text>
+                <Text style={styles.cardNumber}>
+                    {displayNumber}
+                </Text>
             </View>
         </TouchableOpacity>
     );
@@ -73,10 +94,7 @@ const styles = StyleSheet.create({
     },
     cardNumber: {
         color: '#fff',
-        fontSize: 15,
-        letterSpacing: 2,
-        fontWeight: '500',
+        fontSize: 16,
         opacity: 0.8,
-        marginTop: 8,
     },
 }); 

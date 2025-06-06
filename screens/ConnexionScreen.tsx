@@ -1,44 +1,53 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, Alert, View, Text, SafeAreaView, Button } from 'react-native'; // <-- Ajout de Button ici
+import { StyleSheet, TextInput, Alert, View, Text, SafeAreaView, Button, TouchableOpacity } from 'react-native'; // <-- Ajout de Button ici
 import PasswordDisplay from '@/components/ui/Connexion/Password';
 import Keypad from '@/components/ui/Connexion/Keypad';
 import { ThemedText } from '@/components/ThemedText';
 import { router } from 'expo-router';
-import userData from '@/constants/user';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { Ionicons } from '@expo/vector-icons';
+import { loginUser } from '@/query/use-fetch';
 
 export default function ConnexionScreen() {
   const [pin, setPin] = useState('');
   const [id, setId] = useState('');
 
-  const handleDigitPress = (digit: string) => {
+  const handleDigitPress = async (digit: string) => {
     if (digit === '⌫') {
       setPin((prev) => prev.slice(0, -1));
     } else if (pin.length < 6) {
       const newPin = pin + digit;
       setPin(newPin);
 
-      if (newPin.length === 6) {
-        if (id === userData.id) {
-          if (newPin === userData.password) {
-            Alert.alert('Connexion réussie', `Bienvenue, ${userData.id}`);
-            router.push('/(tabs)/accounts');
-          } else {
-            Alert.alert('Erreur', 'Code ou identidiant incorrect');
-            setPin('');
-          }
-        }
-      }
+if (newPin.length === 6) {
+  try {
+    const token = await loginUser(id, newPin); // appel à l'API
+    Alert.alert('Connexion réussie ✅');
+    // TODO : stocker le token dans AsyncStorage ou Context si nécessaire
+    router.push('/(tabs)/accounts');
+  } catch (error) {
+    Alert.alert('Erreur', 'Identifiant ou code incorrect ❌');
+    setPin('');
+  }
+}
     }
   };
 
-  // ----- Ton bouton personnalisé ici -----
   const handleTestButtonPress = () => {
     router.push('/(tabs)/accounts');
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
+
       <View style={styles.root}>
+        {/* Header */}
+        <View style={styles.header}>
+              <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                <Ionicons name="arrow-back" size={24} color="#333" />
+              </TouchableOpacity>
+              <Text style={styles.headerTitle}>Connexion</Text>
+            </View>
         <View style={styles.VueVertical}>
           <ThemedText style={styles.text} type="title">Identifiant</ThemedText>
           <TextInput
@@ -48,17 +57,19 @@ export default function ConnexionScreen() {
             placeholder="Identifiant"
             placeholderTextColor="#999"
           />
-          <ThemedText style={styles.text} type="title">Code Personnel</ThemedText>
+
         </View>
 
         <View style={styles.VueVertical}>
-          <PasswordDisplay style={styles.password} value={pin} />
-          <Keypad onDigitPress={handleDigitPress} />
-
-          {/* ------ Bouton ajouté ici ------ */}
-          <View style={{ marginTop: 20 }}>
-            <Button title="Test application" onPress={handleTestButtonPress} />
-          </View>
+         <ThemedText style={styles.text} type="title">Code Personnel</ThemedText>
+              <PasswordDisplay style={styles.password} value={pin} />
+               <View  style={{ }}>
+                    <Keypad  onDigitPress={handleDigitPress} />
+               </View>
+              {/* ------ Bouton ajouté ici ------ */}
+                <View style={{ marginTop: 2 }}>
+                    <Button title="Test application" onPress={handleTestButtonPress} />
+                </View>
         </View>
       </View>
     </SafeAreaView>
@@ -80,19 +91,11 @@ const styles = StyleSheet.create({
   root: {
     gap: 8,
     alignItems: 'center',
-    marginTop: 50,
     backgroundColor: 'white',
   },
-  password: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 10,
-  },
+
   input: {
-    height: 50,
+    height: 40,
     width: 260,
     borderColor: 'gray',
     borderWidth: 1,
@@ -101,8 +104,24 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   text: {
-    height: 50,
-    width: 260,
+    height: 30,
+    width: 230,
     color: 'black',
+    fontSize: 20,
+  },
+  header: { flexDirection: 'row', alignItems: 'center', marginBottom: 50, marginRight:120 },
+  headerTitle: { marginLeft: 40, fontSize: 20, fontWeight: '600', paddingLeft: 40, color: '#60708F' },
+  backButton: {
+    padding: 5,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowRadius: 2,
+    shadowOffset: { width: 0, height: 1 },
   },
 });

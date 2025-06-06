@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { View, StyleSheet, SafeAreaView, ScrollView, Dimensions, Text, RefreshControl, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import BankCard from '@/components/BankCard';
-import Depense from '@/components/ui/Acceuil/Depenses';
-import Button from '@/components/ui/Connexion/KeyButton';
 import { getAccounts } from '@/query/use-fetch';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
@@ -63,6 +62,7 @@ const activities = [
  
 
 export default function HomeScreen() {
+  const router = useRouter();
   const { data: accounts, isLoading, error, refetch, isFetching } = getAccounts();
   const [activeIndex, setActiveIndex] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
@@ -101,6 +101,13 @@ export default function HomeScreen() {
           amount={bank.balance}
           cardNumber={bank.accountNumber}
           backgroundColor={accountColors[i % accountColors.length]}
+          onPress={() => router.push({
+            pathname: '/account/[id]',
+            params: { 
+              id: bank.accountNumber,
+              color: accountColors[i % accountColors.length]
+            }
+          })}
         />
       </View>
     ));

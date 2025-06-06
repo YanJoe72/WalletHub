@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, FlatList, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, FlatList, RefreshControl, TouchableOpacity } from 'react-native';
 
 import { router, Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,7 +7,6 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import BankCard from '../components/BankCard';
 import { getAccounts } from '@/query/use-fetch';
 import Animated, { FadeIn, Layout } from 'react-native-reanimated';
-import { useRouter } from 'expo-router';
 
 const accountColors = [
     '#8438FF', 
@@ -16,7 +15,6 @@ const accountColors = [
     '#FF1E1E', 
     '#FF2090', 
     '#49FFD8',
-
 ];
 
 const CardSkeleton = () => (
@@ -44,10 +42,10 @@ const CardSkeleton = () => (
   </View>
 );
 
-
 export default function AccountScreen() {
     const { data: accounts, isLoading, error, refetch, isFetching } = getAccounts();
     const [refreshing, setRefreshing] = useState(false);
+    const [hiddenCards, setHiddenCards] = useState<string[]>([]);
 
     const onRefresh = async () => {
         setRefreshing(true);
@@ -55,16 +53,27 @@ export default function AccountScreen() {
         setRefreshing(false);
     };
 
-    const totalAmount = accounts?.reduce((sum, acc) => sum + acc.balance, 0) || 0;
+    const toggleCardVisibility = (accountNumber: string) => {
+        setHiddenCards(prev => {
+            if (prev.includes(accountNumber)) {
+                return prev.filter(id => id !== accountNumber);
+            } else {
+                return [...prev, accountNumber];
+            }
+        });
+    };
+
+    const activeAccounts = accounts?.filter(acc => !hiddenCards.includes(acc.accountNumber)) || [];
+    const totalAmount = activeAccounts.reduce((sum, acc) => sum + acc.balance, 0);
 
     const minSegment = 6; 
-    const n = accounts?.length || 0;
+    const n = activeAccounts.length;
     const minTotal = n * minSegment;
     const rest = 100 - minTotal;
     const totalRestAmount = Math.max(totalAmount, 1); 
 
     let cumulativeRotation = 0;
-    const cardSegments = accounts?.map((acc, index) => {
+    const cardSegments = activeAccounts.map((acc, index) => {
         const proportional = rest * (acc.balance / totalRestAmount);
         const segmentFillPercentage = minSegment + proportional;
         const segmentRotationStart = cumulativeRotation;
@@ -76,7 +85,7 @@ export default function AccountScreen() {
             rotationStart: segmentRotationStart,
             pieColor: accountColors[index % accountColors.length],
         };
-    }) || [];
+    });
 
     const graphSize = 200;
 
@@ -128,7 +137,7 @@ export default function AccountScreen() {
                     </AnimatedCircularProgress>
                     {cardSegments.map((segment, index) => (
                         <AnimatedCircularProgress
-                            key={segment.accountNumber + index + '-visual'}
+                            key={`${segment.accountNumber}-${index}-visual`}
                             size={graphSize}
                             width={20}
                             fill={segment.segmentFill}
@@ -161,19 +170,34 @@ export default function AccountScreen() {
                     keyExtractor={item => item.accountNumber}
                     renderItem={({ item, index }) => (
                         <Animated.View entering={FadeIn} layout={Layout.springify()}>
-                          <BankCard
-                            title={item.bankName}
-                            amount={item.balance}
-                            cardNumber={item.accountNumber}
-                            backgroundColor={accountColors[index % accountColors.length]}
-                            onPress={() => router.push({
-                              pathname: '/account/[id]',
-                              params: { id: item.accountNumber, color: accountColors[index % accountColors.length] }
-                            })}
-                          />
+                            <View style={styles.cardContainer}>
+                                <BankCard
+                                    title={item.bankName}
+                                    amount={item.balance}
+                                    cardNumber={item.accountNumber}
+                                    backgroundColor={accountColors[index % accountColors.length]}
+                                    isHidden={hiddenCards.includes(item.accountNumber)}
+                                    onPress={() => router.push({
+                                        pathname: '/account/[id]',
+                                        params: { 
+                                            id: item.accountNumber, 
+                                            color: accountColors[index % accountColors.length] 
+                                        }
+                                    })}
+                                />
+                                <TouchableOpacity 
+                                    style={styles.toggleButton}
+                                    onPress={() => toggleCardVisibility(item.accountNumber)}
+                                >
+                                    <Ionicons 
+                                        name={hiddenCards.includes(item.accountNumber) ? "eye-off-outline" : "eye-outline"} 
+                                        size={24} 
+                                        color="#60708F" 
+                                    />
+                                </TouchableOpacity>
+                            </View>
                         </Animated.View>
-
-                      )}
+                    )}
                     ListHeaderComponent={renderContent}
                     contentContainerStyle={styles.content}
                     refreshControl={
@@ -244,6 +268,25 @@ const styles = StyleSheet.create({
     },
     circularProgressBase: {
         position: 'absolute',
+    },
+    cardContainer: {
+        position: 'relative',
+        marginBottom: 16,
+        alignItems: 'center',
+    },
+    toggleButton: {
+        position: 'absolute',
+        top: 24,
+        right: 24,
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        borderRadius: 20,
+        padding: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+        zIndex: 1,
     },
 });
 
