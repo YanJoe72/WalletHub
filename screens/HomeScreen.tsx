@@ -6,7 +6,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import userData from '@/constants/user';
 import BankCard  from '@/components/ui/Acceuil/BankCard';
 import Depense  from '@/components/ui/Acceuil/Depenses';
-import Button  from '@/components/ui/Connexion/KeyButton';
+import Button  from '@/components/ui/Acceuil/ImageButton';
 
 
 export default function HomeScreen() {
@@ -85,8 +85,6 @@ const comptes = [
 
         {/* KeyButton 2 avec image */}
         <Button
-          digit="2"
-          onPress={(digit) => console.log(digit)}
           imageSource={require('../assets/images/Notification.png')} // Remplace par ton image
         />
       </View>
@@ -96,7 +94,6 @@ const comptes = [
       <ScrollView
         horizontal
          pagingEnabled
-
          onScroll={handleScroll}
          scrollEventThrottle={16}
          showsHorizontalScrollIndicator={false}
@@ -124,20 +121,14 @@ const comptes = [
               {/* KeyButton 1 avec image */}
               <Button
                 style={styles.button}
-                digit="1"
-                onPress={(digit) => console.log(digit)}
                 imageSource={require('../assets/images/Virement.png')} // Remplace par ton image
               />
               <Button
-              style={styles.button}
-                digit="1"
-                onPress={(digit) => console.log(digit)}
+                style={styles.button}
                 imageSource={require('../assets/images/Scan.png')} // Remplace par ton image
               />
               <Button
                 style={styles.button}
-                digit="1"
-                onPress={(digit) => console.log(digit)}
                 imageSource={require('../assets/images/Document.png')} // Remplace par ton image
               />
 
