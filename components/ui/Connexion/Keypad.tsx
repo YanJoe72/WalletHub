@@ -7,7 +7,7 @@ const rows = [
   ['1', '2', '3'],
   ['4', '5', '6'],
   ['7', '8', '9'],
-  ['', '0','⌫']
+  ['','0','⌫']
 ];
 
 const Keypad: React.FC<{ onDigitPress: (digit: string) => void }> = ({ onDigitPress }) => {
@@ -17,7 +17,7 @@ const Keypad: React.FC<{ onDigitPress: (digit: string) => void }> = ({ onDigitPr
         <View key={rowIndex} style={styles.row}>
           {row.map((digit, colIndex) => {
             if (digit === '') {
-              return <View key={colIndex} style={styles.empty} />;
+              return <View key={colIndex} style={{marginRight:60}} />;
             }
 
             return (
@@ -36,9 +36,10 @@ const Keypad: React.FC<{ onDigitPress: (digit: string) => void }> = ({ onDigitPr
 
 const styles = StyleSheet.create({
   container: {
-      width:300,
+    width:300,
     backgroundColor : '#F0F1F5',
     flexWrap: 'wrap',
+    height:300,
     borderRadius: 20,
     justifyContent: 'center',
     marginTop: 30,
