@@ -7,32 +7,30 @@ import { router } from 'expo-router';
 import userData from '@/constants/user';
 import { Ionicons } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { loginUser } from '@/query/loginUser';
+import { loginUser } from '@/query/use-fetch';
 
 export default function ConnexionScreen() {
   const [pin, setPin] = useState('');
   const [id, setId] = useState('');
 
-  const handleDigitPress = (digit: string) => {
+  const handleDigitPress = async (digit: string) => {
     if (digit === '⌫') {
       setPin((prev) => prev.slice(0, -1));
     } else if (pin.length < 6) {
       const newPin = pin + digit;
       setPin(newPin);
 
-      if (newPin.length === 6) {
-        try {
-          const token = await loginUser(id, newPin); // appel à l'API
-
-          Alert.alert('Connexion réussie ✅');
-          // TODO : stocker le token dans AsyncStorage ou Context si nécessaire
-          router.push('/(tabs)/accounts');
-        } catch (error) {
-          Alert.alert('Erreur', 'Identifiant ou code incorrect ❌');
-          setPin('');
-        }
-      }
-     }
+if (newPin.length === 6) {
+  try {
+    const token = await loginUser(id, newPin); // appel à l'API
+    Alert.alert('Connexion réussie ✅');
+    // TODO : stocker le token dans AsyncStorage ou Context si nécessaire
+    router.push('/(tabs)/accounts');
+  } catch (error) {
+    Alert.alert('Erreur', 'Identifiant ou code incorrect ❌');
+    setPin('');
+  }
+}
     }
   };
 
