@@ -7,6 +7,7 @@ import { router } from 'expo-router';
 import userData from '@/constants/user';
 import { Ionicons } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { loginUser } from '@/query/loginUser';
 
 export default function ConnexionScreen() {
   const [pin, setPin] = useState('');
@@ -20,16 +21,18 @@ export default function ConnexionScreen() {
       setPin(newPin);
 
       if (newPin.length === 6) {
-        if (id === userData.id) {
-          if (newPin === userData.password) {
-            Alert.alert('Connexion réussie', `Bienvenue, ${userData.id}`);
-            router.push('/(tabs)/accounts');
-          } else {
-            Alert.alert('Erreur', 'Code ou identidiant incorrect');
-            setPin('');
-          }
+        try {
+          const token = await loginUser(id, newPin); // appel à l'API
+
+          Alert.alert('Connexion réussie ✅');
+          // TODO : stocker le token dans AsyncStorage ou Context si nécessaire
+          router.push('/(tabs)/accounts');
+        } catch (error) {
+          Alert.alert('Erreur', 'Identifiant ou code incorrect ❌');
+          setPin('');
         }
       }
+     }
     }
   };
 
