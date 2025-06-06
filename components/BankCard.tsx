@@ -10,7 +10,6 @@ export interface BankCardProps {
 }
 
 export default function BankCard({ title, amount, cardNumber, backgroundColor }: BankCardProps) {
-    // Formatage du numéro de carte
     const formattedNumber = cardNumber
         ? cardNumber.replace(/(.{4})/g, '$1 ').trim()
         : '';
