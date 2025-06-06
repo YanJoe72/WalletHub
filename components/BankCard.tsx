@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, GestureResponderEvent, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export interface BankCardProps {
@@ -7,26 +7,28 @@ export interface BankCardProps {
     amount: number;
     cardNumber: string;
     backgroundColor: string | import('react-native').ColorValue;
+    onPress?: (event: GestureResponderEvent) => void;
 }
 
-export default function BankCard({ title, amount, cardNumber, backgroundColor }: BankCardProps) {
-    // Formatage du numéro de carte
+
+export default function BankCard({ title, amount, cardNumber, backgroundColor, onPress }: BankCardProps) {
     const formattedNumber = cardNumber
         ? cardNumber.replace(/(.{4})/g, '$1 ').trim()
         : '';
 
     return (
-        <View style={[styles.card, { backgroundColor: backgroundColor || '#8F5CFF' }]}> 
-            <View style={styles.headerRow}>
-                <Text style={styles.title}>{title}</Text>
-                <Ionicons name="eye-off" size={24} color="rgba(255,255,255,0.18)" />
+        <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
+            <View style={[styles.card, { backgroundColor: backgroundColor || '#8F5CFF' }]}> 
+                <View style={styles.headerRow}>
+                    <Text style={styles.title}>{title}</Text>
+                    <Ionicons name="eye-off" size={24} color="rgba(255,255,255,0.18)" />
+                </View>
+                <Text style={styles.amount}>
+                    {Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount)}
+                </Text>
+                <Text style={styles.cardNumber}>{formattedNumber}</Text>
             </View>
-            <Text style={styles.amount}>
-                {Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount)}
-            </Text>
-            <Text style={styles.cardNumber}>{formattedNumber}</Text>
-       
-        </View>
+        </TouchableOpacity>
     );
 }
 

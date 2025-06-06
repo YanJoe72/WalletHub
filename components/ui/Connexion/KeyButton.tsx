@@ -12,6 +12,7 @@ interface KeyButtonProps {
 const KeyButton: React.FC<KeyButtonProps> = ({ digit, onPress, disabled = false ,imageSource,size = 'default'}) => {
     const isSmall = size === 'small';
 
+
   return (
     <TouchableOpacity
 
@@ -19,8 +20,9 @@ const KeyButton: React.FC<KeyButtonProps> = ({ digit, onPress, disabled = false 
       onPress={() => onPress(digit)}
       disabled={disabled}
       activeOpacity={0.7}
+
     >
-              <Text style={styles.text}>{digit}</Text>
+        <Text style={styles.text}>{digit}</Text>
 
           </TouchableOpacity>
   );
