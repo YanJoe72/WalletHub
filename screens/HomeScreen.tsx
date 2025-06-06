@@ -18,6 +18,7 @@ const accountColors = [
     '#49FFD8'
 ];
 
+
 const ActionButton = ({ icon, label }: { icon: keyof typeof Ionicons.glyphMap; label: string }) => (
   <View style={styles.actionButton}>
     <View style={styles.actionIconContainer}>
@@ -205,11 +206,13 @@ export default function HomeScreen() {
                   <Text style={styles.activityDate}>{item.date}</Text>
                 </View>
                 <Text style={styles.activityAmount}>{item.amount}</Text>
+
               </View>
             </Animated.View>
           ))}
         </View>
       </ScrollView>
+
     </SafeAreaView>
   );
 }

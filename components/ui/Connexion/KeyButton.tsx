@@ -8,15 +8,16 @@ interface KeyButtonProps {
   imageSource?: any;  // Pour accepter une image source
 }
 
-const KeyButton: React.FC<KeyButtonProps> = ({ digit, onPress, disabled = false ,imageSource}) => {
+const KeyButton: React.FC<KeyButtonProps> = ({ digit, onPress, disabled = false }) => {
   return (
     <TouchableOpacity
       style={[styles.button, disabled && styles.disabled]}
       onPress={() => onPress(digit)}
       disabled={disabled}
       activeOpacity={0.7}
+
     >
-              <Text style={styles.text}>{digit}</Text>
+        <Text style={styles.text}>{digit}</Text>
 
           </TouchableOpacity>
   );

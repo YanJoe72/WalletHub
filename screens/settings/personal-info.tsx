@@ -1,12 +1,11 @@
-// PersonalInfo.tsx
-
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { databases } from '@/config/appwrite.config';
 import { DATABASE_ID, COLLECTION_ID } from '@/config/constants';
-import { ProfileItem as ProfileItemType, ProfileSection, UserData } from '@/app/types/profile';
+import { ProfileItem as ProfileItemType, ProfileSection, UserData } from '@/types/profile';
+import { useRouter } from 'expo-router';
 
 const ProfileItem: React.FC<ProfileItemType> = ({ icon, label, value, action }) => (
   <TouchableOpacity style={styles.itemContainer}>
@@ -31,13 +30,14 @@ const LoadingScreen = () => (
 export default function PersonalInfo() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchPublicData = async () => {
       try {
         const documents = await databases.listDocuments(DATABASE_ID, COLLECTION_ID);
         if (documents.documents.length > 0) {
-          setUserData(documents.documents[0]);
+          setUserData(documents.documents[0] as UserData);
         } else {
           console.warn("Aucun document public trouvé.");
         }
@@ -86,18 +86,28 @@ export default function PersonalInfo() {
       <Stack.Screen 
         options={{ 
           title: "Informations personnelles",
+          headerShown: true,
           headerTitleStyle: {
             fontSize: 17,
             fontWeight: '600',
+            color: 'black',
           },
-        }} 
+          headerStyle: {
+            backgroundColor: '#F6F6F6',
+          },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+              <Ionicons name="arrow-back" size={24} color="#333" />
+            </TouchableOpacity>
+          ),
+        }}
       />
       <ScrollView style={styles.container}>
         {profileSections.map((section, index) => (
           <View key={index} style={styles.section}>
             <Text style={styles.sectionTitle}>{section.title}</Text>
             <View style={styles.sectionContent}>
-              {section.items.map((item, itemIndex) => (
+              {section.items.map((item: ProfileItemType, itemIndex: number) => (
                 <ProfileItem key={itemIndex} {...item} />
               ))}
             </View>
@@ -118,5 +128,21 @@ const styles = StyleSheet.create({
   textContainer: { flex: 1 },
   label: { fontSize: 16, color: '#1F2937', fontWeight: '500' },
   value: { fontSize: 14, color: '#6B7280', marginTop: 2 },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center' }
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  backButton: {
+    padding: 5,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowRadius: 2,
+    shadowOffset: { width: 0, height: 1 },
+  },
+  header: { flexDirection: 'row', alignItems: 'center', marginBottom: 50, backgroundColor:'hite' },
+  headerTitle: { marginLeft: 10, fontSize: 20, fontWeight: '600', paddingLeft: 40, color: 'black' },
+
 });
