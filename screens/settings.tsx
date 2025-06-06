@@ -6,7 +6,8 @@ import {
   ScrollView, 
   TouchableOpacity, 
   TextInput,
-  Platform
+  Platform,
+  SafeAreaView
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -90,7 +91,6 @@ export default function Settings() {
   const insets = useSafeAreaInsets();
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Filtrer les sections en fonction de la recherche
   const filteredSections = useMemo(() => {
     if (!searchQuery.trim()) return settingsData;
 
@@ -105,13 +105,26 @@ export default function Settings() {
       .filter(section => section.items.length > 0);
   }, [searchQuery]);
 
+  const renderHeader = () => (
+    <View style={styles.header}>
+      <View style={styles.headerContent}>
+        <View style={styles.headerLeft} />
+        <Text style={styles.headerTitle}>Settings</Text>
+        <View style={styles.notificationIcon}>
+          <Ionicons name="notifications-outline" size={22} color="#6B7280" />
+        </View>
+      </View>
+    </View>
+  );
+
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Text style={styles.headerTitle}>Settings</Text>
-
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+    <SafeAreaView style={styles.container}>
+      {renderHeader()}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContainer}
+      >
         <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
-
         <View style={styles.content}>
           {filteredSections.map((section, index) => (
             <View key={section.title}>
@@ -130,7 +143,7 @@ export default function Settings() {
           ))}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -139,13 +152,43 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
+  header: {
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f3f4f6',
+    zIndex: 1,
+    paddingTop: 20,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  headerLeft: {
+    width: 40,
+  },
   headerTitle: {
-    fontSize: 28,
-    fontWeight: '600',
-    color: '#1C1C1E',
-    marginHorizontal: 20,
-    marginBottom: 20,
-    marginTop: 10,
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#60708F',
+    textAlign: 'center',
+    flex: 1,
+  },
+  notificationIcon: {
+    backgroundColor: '#f3f4f6',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    padding: 6,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowRadius: 2,
+    shadowOffset: { width: 0, height: 1 },
+  },
+  scrollContainer: {
+    paddingBottom: 20,
   },
   content: {
     paddingHorizontal: 20,
@@ -153,6 +196,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     paddingHorizontal: 20,
     marginBottom: 30,
+    marginTop: 20,
   },
   searchBar: {
     flexDirection: 'row',

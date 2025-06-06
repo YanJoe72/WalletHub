@@ -1,205 +1,387 @@
-import React, { useState,useRef } from 'react';
-import { StyleSheet,TextInput, Alert ,ScrollView, View, Image,SafeAreaView, Dimensions, NativeScrollEvent, NativeSyntheticEvent   } from 'react-native';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import userData from '@/constants/user';
-import BankCard  from '@/components/ui/Acceuil/BankCard';
-import Depense  from '@/components/ui/Acceuil/Depenses';
-import Button  from '@/components/ui/Acceuil/ImageButton';
+import React, { useState, useRef } from 'react';
+import { View, StyleSheet, SafeAreaView, ScrollView, Dimensions, Text, RefreshControl, FlatList } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import BankCard from '@/components/BankCard';
+import Depense from '@/components/ui/Acceuil/Depenses';
+import Button from '@/components/ui/Connexion/KeyButton';
+import { getAccounts } from '@/query/use-fetch';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
+const { width } = Dimensions.get('window');
 
-export default function HomeScreen() {
-
-//---------POINTS-----------
-const { width } = Dimensions.get('window'); // pour savoir la largeur de l’écran
-
-const [activeIndex, setActiveIndex] = useState(0);
-
-const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-  const offsetX = event.nativeEvent.contentOffset.x;
-  const index = Math.round(offsetX / width); // déduit l'index actif
-  setActiveIndex(index);
-};
-
-//---------BankCard-----------
-
-const comptes = [
-  { title: 'N26', amount: '1230.45',cardNumber:'0001 0002 300', backgroundColor:'#F9E79F'},
-  { title: 'Revolut', amount: '980.00',cardNumber:'154845 84845 4558', backgroundColor:'#FFD6B0'},
-  { title: 'Société Générale', amount: '540.75' ,cardNumber:'1784848 9598485 8958 ',backgroundColor: '#B8E0D2'},
-  { title: 'Lydia', amount: '215.10', cardNumber:'741 852 963',backgroundColor: '#B5B9FF'},
-  { title: 'Caisse d’Épargne', amount: '880.00' , cardNumber:'12345 789 7862',backgroundColor:'#A7C7E7'},
+const accountColors = [
+    '#8438FF',
+    '#38CFFF',
+    '#FF8000',
+    '#FF1E1E',
+    '#FF2090',
+    '#49FFD8'
 ];
 
-//---------DEPENSES-----------
- const depenses = [
-    {
-      id: 1,
-      imageSource: require('../assets/images/netflixlogo.png'),
-      title: "Abonnement mensuel Netflix ",
-      montant: "29.99 €",
-    },
-    {
-      id: 2,
-      imageSource: require('../assets/images/crabGamelogo.png'),
-      title: "Crab game : Jeux",
-      montant: "50.99€",
-    },
-    {
-      id: 3,
-      imageSource: require('../assets/images/photologo.png'),
-      title: "Appareil Photo",
-      montant: "64.99€",
-    },
-    {
-      id: 4,
-      imageSource: require('../assets/images/favicon.png'),
-      title: "Abonnement mensuel ExpoGo ",
-      montant: "100.99€",
-    },
-    {
-      id: 5,
-      imageSource: require('../assets/images/netflixlogo.png'),
-      title: "Encore Netflix mais Prenium",
-      montant: "59.99 €",
-    },
-  ];
 
-//---------VUES-----------
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContainerVertical}
+const ActionButton = ({ icon, label }: { icon: keyof typeof Ionicons.glyphMap; label: string }) => (
+  <View style={styles.actionButton}>
+    <View style={styles.actionIconContainer}>
+      <Ionicons name={icon} size={24} color="#60708F" />
+    </View>
+    <Text style={styles.actionLabel} numberOfLines={2}>{label}</Text>
+  </View>
+);
 
-      >
-<View style={styles.header}>
+const activities = [
+  {
+    id: '1',
+    name: 'Netflix Membership',
+    date: '15.01.2021',
+    amount: '- ₺ 29.90',
+  },
+  {
+    id: '2',
+    name: 'Turkcell Invoice',
+    date: '10.01.2021',
+    amount: '- ₺ 65.00',
+  },
+  {
+    id: '3',
+    name: 'Money Transfer',
+    date: '03.01.2021',
+    amount: '- ₺ 450.00',
+  },
+  {
+    id: '4',
+    name: 'Macdo',
+    date: '03.01.2021',
+    amount: '- ₺ 23.00',
+  },
+  {
+    id: '5',
+    name: 'UberEats',
+    date: '03.01.2021',
+    amount: '- ₺ 80.00',
+  },
+];
+ 
 
-      {/* Conteneur avec flexDirection row pour les éléments côte à côte */}
-      <View style={{marginTop:50,marginBottom:-150, marginLeft:150, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-        {/* KeyButton 1 avec image */}
+export default function HomeScreen() {
+  const { data: accounts, isLoading, error, refetch, isFetching } = getAccounts();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+  const scrollViewRef = useRef<ScrollView>(null);
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
 
-        <ThemedText style={{color:'#A9A9A9' }} type="title">Home</ThemedText>
+  const handleScroll = (event: any) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const index = Math.round(offsetX / width);
+    setActiveIndex(index % (accounts?.length || 1));
 
-        {/* KeyButton 2 avec image */}
-        <Button
-          imageSource={require('../assets/images/Notification.png')} // Remplace par ton image
+    // Logique de défilement infini
+    if (accounts && accounts.length > 0) {
+      const totalWidth = width * accounts.length;
+      if (offsetX >= totalWidth) {
+        scrollViewRef.current?.scrollTo({ x: 0, animated: false });
+      }
+    }
+  };
+
+  const renderCards = () => {
+    if (!accounts || accounts.length === 0) return null;
+
+    // Dupliquer les cartes pour créer un effet infini
+    const duplicatedCards = [...accounts, ...accounts];
+
+    return duplicatedCards.map((bank, i) => (
+      <View key={i} style={styles.cardWrapper}>
+        <BankCard
+          title={bank.bankName}
+          amount={bank.balance}
+          cardNumber={bank.accountNumber}
+          backgroundColor={accountColors[i % accountColors.length]}
         />
       </View>
+    ));
+  };
 
+  const renderPaginationDots = () => {
+    if (!accounts || accounts.length === 0) return null;
 
-      {/* ScrollView avec les BankCards */}
-      <ScrollView
-        horizontal
-         pagingEnabled
-         onScroll={handleScroll}
-         scrollEventThrottle={16}
-         showsHorizontalScrollIndicator={false}
-         contentContainerStyle={styles.scrollContent}
-         style={styles.scrollContainerHorizontal}>
-        {comptes.map((bank, i) => (
-            <View key={i} style={{height:100,width:width, alignItems: 'center' }}>
-                <BankCard  key={i}  title={bank.title} amount={bank.amount} cardNumber={bank.cardNumber} backgroundColor={bank.backgroundColor}/>
-              </View>
+    return (
+      <View style={styles.pagination}>
+        {accounts.map((_, index) => (
+          <View
+            key={index}
+            style={[
+              styles.dot,
+              { backgroundColor: activeIndex % accounts.length === index ? '#8B98AF' : '#DCE1EA' },
+            ]}
+          />
         ))}
-      </ScrollView>
-<View style={styles.pagination}>
-  {comptes.map((_, index) => (
-    <View
-      key={index}
-      style={[
-        styles.dot,
-        { backgroundColor: index === activeIndex ? '#8B98AF' : '#DCE1EA' },
-      ]}
-    />
-  ))}
-</View>
-
-      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' ,marginTop:25}}>
-              {/* KeyButton 1 avec image */}
-              <Button
-                style={styles.button}
-                imageSource={require('../assets/images/Virement.png')} // Remplace par ton image
-              />
-              <Button
-                style={styles.button}
-                imageSource={require('../assets/images/Scan.png')} // Remplace par ton image
-              />
-              <Button
-                style={styles.button}
-                imageSource={require('../assets/images/Document.png')} // Remplace par ton image
-              />
-
       </View>
-   </View>
+    );
+  };
 
-<ThemedText style={{marginLeft:30,color:'gray',  fontWeight: 'bold' }}>Activité récentes:</ThemedText>
+  const renderHeader = () => (
+    <View style={styles.header}>
+      <View style={styles.headerContent}>
+        <View style={styles.headerLeft} />
+        <Text style={styles.headerTitle}>Home</Text>
+        <View style={styles.notificationIcon}>
+          <Ionicons name="notifications-outline" size={22} color="#6B7280" />
+        </View>
+      </View>
+    </View>
+  );
 
+  const renderActionButtons = () => (
+    <View style={styles.actionButtonsContainer}>
+      <ActionButton icon="swap-horizontal-outline" label="Virement" />
+      <ActionButton icon="scan-outline" label="Scan" />
+      <ActionButton icon="document-text-outline" label="Documents" />
+      <ActionButton icon="add-circle-outline" label="Nouveau compte" />
+    </View>
+  );
 
-<View style={styles.scrollContent}>
-              {depenses.map((depense, i) => (
-                <Depense key={depense.id} imageSource={depense.imageSource} title={depense.title} montant={depense.montant} />
-              ))}
-</View>
-                 </ScrollView>
+  return (
+    <SafeAreaView style={styles.container}>
+      {renderHeader()}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing || isFetching} onRefresh={onRefresh} />
+        }
+      >
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <Text>Chargement...</Text>
+          </View>
+        ) : error ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{error.message}</Text>
+          </View>
+        ) : accounts?.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Text>Aucun compte trouvé.</Text>
+          </View>
+        ) : (
+          <>
+            <ScrollView
+              ref={scrollViewRef}
+              horizontal
+              pagingEnabled
+              onScroll={handleScroll}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.cardsContainer}
+              snapToInterval={width}
+              decelerationRate="fast"
+              snapToAlignment="center"
+              disableIntervalMomentum={true}
+              directionalLockEnabled={true}
+              overScrollMode="never"
+              scrollEventThrottle={32}
+            >
+              {renderCards()}
+            </ScrollView>
+
+            {renderPaginationDots()}
+          </>
+        )}
+
+        {renderActionButtons()}
+        
+        <View style={styles.activitySection}>
+          <Text style={styles.activitiesTitle}>Activités récentes</Text>
+          {activities.map((item, index) => (
+            <Animated.View key={item.id} entering={FadeIn.delay(index * 100)}>
+              <View style={styles.activityRow}>
+                <View style={styles.activityIconPlaceholder}>
+                  <Ionicons name="card-outline" size={24} color="#666" />
+                </View>
+                <View style={styles.activityInfo}>
+                  <Text style={styles.activityName}>{item.name}</Text>
+                  <Text style={styles.activityDate}>{item.date}</Text>
+                </View>
+                <Text style={styles.activityAmount}>{item.amount}</Text>
+
+              </View>
+            </Animated.View>
+          ))}
+        </View>
+      </ScrollView>
+
     </SafeAreaView>
-
   );
 }
 
 const styles = StyleSheet.create({
-      safeArea: {
-          flex: 1,
-          backgroundColor: 'white',
-        },
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
   },
-  stepContainer: {
-    gap: 8,
-
-  },header: {
-      backgroundColor: 'white',
-      height:480,
-    },
-
-  scrollContainerVertical:{
-          paddingBottom: 20
-      },
-  scrollContainerHorizontalHorizontal: {
-
-      },
-  scrollContent: {
+  header: {
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f3f4f6',
+    zIndex: 1,
+    paddingTop: 20,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  headerLeft: {
+    width: 40,
+  },
+  headerTitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#60708F',
+    textAlign: 'center',
+    flex: 1,
+  },
+  notificationIcon: {
+    backgroundColor: '#f3f4f6',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    padding: 6,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowRadius: 2,
+    shadowOffset: { width: 0, height: 1 },
+  },
+  scrollContainer: {
+    paddingBottom: 20,
+  },
+  cardsContainer: {
     paddingHorizontal: 1,
     alignItems: 'center',
-      },
+  },
+  cardWrapper: {
+    width: width,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 20,
+  },
   pagination: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-
-    gap: 8,
+    gap: 6,
+    marginTop: 10,
   },
   dot: {
-    width: 15,
-    height: 15,
-    borderRadius: 100,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
   },
+  actionButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginTop: 25,
+    marginBottom: 30,
+    paddingHorizontal: 20,
+  },
+  actionButton: {
+    alignItems: 'center',
+    width: '22%',
+    height: 85,
+  },
+  newAccountButton: {
+    marginTop: 8,
+  },
+  actionIconContainer: {
+    width: 45,
+    height: 45,
+    borderRadius: 22.5,
+    backgroundColor: '#f3f4f6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+  actionLabel: {
+    fontSize: 11,
+    color: '#60708F',
+    textAlign: 'center',
+    height: 40,
+    lineHeight: 16,
+  },
+  sectionTitle: {
+    marginLeft: 30,
+    color: 'gray',
+    fontWeight: 'bold',
+    marginTop: 20,
+  },
+  loadingContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  errorContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  errorText: {
+    color: 'red',
+  },
+  emptyContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  activitySection: { 
+    marginTop: 20,
+    paddingHorizontal: 20,
+  },
+  activitiesTitle: { 
+    fontWeight: '600', 
+    marginBottom: 15,
+    fontSize: 16,
+    color: '#60708F',
+  },
+  activityRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingVertical: 8,
+  },
+  activityIconPlaceholder: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#f0f0f0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  activityInfo: {
+    flex: 1,
+    marginRight: 12,
+  },
+  activityName: { 
+    fontWeight: '500',
+    fontSize: 14,
+    color: '#333',
+  },
+  activityDate: { 
+    color: '#aaa', 
+    fontSize: 12,
+    marginTop: 2,
+  },
+  activityAmount: { 
+    fontWeight: 'bold', 
+    color: '#333',
+    fontSize: 14,
+    minWidth: 100,
+    textAlign: 'right',
+  },
+ 
 });
-
-
-
-
-
-
-
-
-// import HomeScreen from '@/Screen/HomeScreen';
-//
-// export default function Home(){
-//     return <HomeScreen/>;
-// }

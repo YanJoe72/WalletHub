@@ -10,6 +10,7 @@ export interface BankCardProps {
     onPress?: (event: GestureResponderEvent) => void;
 }
 
+
 export default function BankCard({ title, amount, cardNumber, backgroundColor, onPress }: BankCardProps) {
     const formattedNumber = cardNumber
         ? cardNumber.replace(/(.{4})/g, '$1 ').trim()
