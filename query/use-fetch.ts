@@ -16,6 +16,41 @@ const fetchAccounts = async (): Promise<Account[]> => {
     }));
 };
 
+const fetchAccountsById = async (accountId: string): Promise<Account> => {
+    try {
+        const response = await databases.listDocuments(
+            databaseId, 
+            collectionId, 
+            [
+                Query.equal('accountNumber', accountId),
+                Query.limit(1)
+            ]
+        );
+
+        if (response.documents.length === 0) {
+            throw new Error('Compte non trouvé');
+        }
+
+        const document = response.documents[0];
+        return {
+            userId: document.userId as number,
+            bankName: document.bankName as string,
+            accountNumber: document.accountNumber as string,
+            balance: document.balance as number
+        };
+    } catch (error) {
+        console.error('Erreur lors de la récupération du compte:', error);
+        throw new Error('Erreur lors de la récupération des détails du compte');
+    }
+};
+
+export const useAccountDetails = (accountId: string) => {
+    return useQuery({
+        queryKey: ['account', accountId],
+        queryFn: () => fetchAccountsById(accountId),
+    });
+};
+
 export const getAccounts = () => {
     return useQuery<Account[], Error>({
         queryKey: ['accounts'],

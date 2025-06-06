@@ -1,23 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, RefreshControl } from 'react-native';
-import { Tabs } from 'expo-router';
+import { router, Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import BankCard from '../components/BankCard';
 import { getAccounts } from '@/query/use-fetch';
 import Animated, { FadeIn, Layout } from 'react-native-reanimated';
+import { useRouter } from 'expo-router';
 
 const accountColors = [
-    '#A7C7E7', 
-    '#B5B9FF', 
-    '#B8E0D2',
-    '#FFD6B0', 
-    '#C3AED6', 
-    '#A0D8B3',
-    '#F7C8E0', 
-    '#F9E79F', 
-    '#B4DFE5', 
-    '#F6C28B', 
+    '#8438FF', 
+    '#38CFFF', 
+    '#FF8000',
+    '#FF1E1E', 
+    '#FF2090', 
+    '#49FFD8',
 
 ];
 
@@ -187,14 +184,18 @@ export default function AccountScreen() {
                     keyExtractor={item => item.accountNumber}
                     renderItem={({ item, index }) => (
                         <Animated.View entering={FadeIn} layout={Layout.springify()}>
-                            <BankCard
-                                title={item.bankName}
-                                amount={item.balance}
-                                cardNumber={item.accountNumber}
-                                backgroundColor={accountColors[index % accountColors.length]}
-                            />
+                          <BankCard
+                            title={item.bankName}
+                            amount={item.balance}
+                            cardNumber={item.accountNumber}
+                            backgroundColor={accountColors[index % accountColors.length]}
+                            onPress={() => router.push({
+                              pathname: '/account/[id]',
+                              params: { id: item.accountNumber, color: accountColors[index % accountColors.length] }
+                            })}
+                          />
                         </Animated.View>
-                    )}
+                      )}
                     ListHeaderComponent={renderHeader}
                     contentContainerStyle={styles.content}
                     refreshControl={
