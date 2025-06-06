@@ -96,5 +96,6 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         opacity: 0.8,
+        paddingTop:40
     },
 }); 

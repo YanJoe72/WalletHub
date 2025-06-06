@@ -21,9 +21,8 @@ export default function ConnexionScreen() {
 
 if (newPin.length === 6) {
   try {
-    const token = await loginUser(id, newPin); // appel à l'API
+    const token = await loginUser(id, newPin); 
     Alert.alert('Connexion réussie ✅');
-    // TODO : stocker le token dans AsyncStorage ou Context si nécessaire
     router.push('/(tabs)/accounts');
   } catch (error) {
     Alert.alert('Erreur', 'Identifiant ou code incorrect ❌');
@@ -34,7 +33,7 @@ if (newPin.length === 6) {
   };
 
   const handleTestButtonPress = () => {
-    router.push('/(tabs)/accounts');
+    router.push('/(tabs)/home');
   };
 
   return (
