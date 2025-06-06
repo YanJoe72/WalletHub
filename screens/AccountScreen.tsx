@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, RefreshControl } from 'react-native';
+
 import { router, Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
@@ -80,44 +81,19 @@ export default function AccountScreen() {
     const graphSize = 200;
 
     const renderHeader = () => (
+        <View style={styles.header}>
+            <View style={styles.headerContent}>
+                <View style={styles.headerLeft} />
+                <Text style={styles.headerTitle}>Accounts</Text>
+                <View style={styles.notificationIcon}>
+                    <Ionicons name="notifications-outline" size={22} color="#6B7280" />
+                </View>
+            </View>
+        </View>
+    );
+
+    const renderContent = () => (
         <View>
-            <Tabs.Screen
-                options={{
-                    headerShown: true,
-                    title: '',
-                    headerTitleAlign: 'center',
-                    headerStyle: {
-                        backgroundColor: '#fff',
-                        shadowColor: 'transparent',
-                        elevation: 0,
-                    },
-                    headerTitleStyle: {
-                        color: '#60708F',
-                        fontWeight: 'bold',
-                    },
-                    headerRight: () => (
-                        <View style={{ marginRight: 18 }}>
-                            <View
-                                style={{
-                                    backgroundColor: '#f3f4f6',
-                                    borderRadius: 8,
-                                    borderWidth: 1,
-                                    borderColor: '#e5e7eb',
-                                    padding: 6,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    shadowColor: '#000',
-                                    shadowOpacity: 0.06,
-                                    shadowRadius: 2,
-                                    shadowOffset: { width: 0, height: 1 },
-                                }}
-                            >
-                                <Ionicons name="notifications-outline" size={22} color="#6B7280" />
-                            </View>
-                        </View>
-                    ),
-                }}
-            />
             <View style={{ alignItems: 'center', marginBottom: 20, marginTop: 20 }}>
                 <View style={styles.circularProgressContainer}>
                     <AnimatedCircularProgress
@@ -170,6 +146,7 @@ export default function AccountScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
+            {renderHeader()}
             {isLoading ? (
                 <View style={{ padding: 16 }}>
                     {[...Array(3)].map((_, i) => <CardSkeleton key={i} />)}
@@ -195,8 +172,9 @@ export default function AccountScreen() {
                             })}
                           />
                         </Animated.View>
+
                       )}
-                    ListHeaderComponent={renderHeader}
+                    ListHeaderComponent={renderContent}
                     contentContainerStyle={styles.content}
                     refreshControl={
                         <RefreshControl refreshing={refreshing || isFetching} onRefresh={onRefresh} />
@@ -213,6 +191,41 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFFFFF',
+    },
+    header: {
+        backgroundColor: 'white',
+        borderBottomWidth: 1,
+        borderBottomColor: '#f3f4f6',
+        zIndex: 1,
+        paddingTop: 20,
+    },
+    headerContent: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+    },
+    headerLeft: {
+        width: 40,
+    },
+    headerTitle: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        color: '#60708F',
+        textAlign: 'center',
+        flex: 1,
+    },
+    notificationIcon: {
+        backgroundColor: '#f3f4f6',
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#e5e7eb',
+        padding: 6,
+        shadowColor: '#000',
+        shadowOpacity: 0.06,
+        shadowRadius: 2,
+        shadowOffset: { width: 0, height: 1 },
     },
     content: {
         padding: 16,
@@ -233,3 +246,4 @@ const styles = StyleSheet.create({
         position: 'absolute',
     },
 });
+
